@@ -1,78 +1,102 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es" class="transition-colors duration-300">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Clima y Viajes</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clima y Viajes</title>
 
-  <!-- Activar dark mode por clase -->
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-  tailwind.config = {
-    darkMode: 'class'
-  }
-</script>
-</head>
+    <!-- Activar dark mode por clase -->
 
-<body class="bg-slate-100 dark:bg-slate-800 dark:text-white min-h-screen transition-colors duration-300">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+      };
+    </script>
+  </head>
 
-<header class="bg-blue-900 dark:bg-slate-900 text-white p-4 shadow-md flex justify-between items-center transition-colors duration-300">
-  <h1 class="text-xl font-bold">🌎 Clima & Recomendaciones</h1>
+  <body
+    class="bg-slate-100 dark:bg-slate-800 dark:text-white min-h-screen transition-colors duration-300"
+  >
+    <header
+      class="bg-blue-900 dark:bg-slate-900 text-white p-4 shadow-md flex justify-between items-center transition-colors duration-300"
+    >
+      <h1 class="text-xl font-bold">🌎 Clima & Recomendaciones</h1>
 
-  <button id="themeToggle"
-          class="bg-white dark:bg-slate-700 dark:text-white text-black px-3 py-1 rounded transition hover:scale-105">
-    🌙
-  </button>
-</header>
-
-<main class="max-w-5xl mx-auto p-4 space-y-6">
-
-  <!-- Buscador -->
-  <section>
-    <form id="searchForm" class="flex gap-2 relative">
-      <input 
-        id="cityInput"
-        type="text"
-        placeholder="Buscar ciudad..."
-        class="flex-1 p-2 rounded border dark:border-slate-600 bg-white dark:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        autocomplete="off"
-        required
-      />
-      <button class="bg-blue-600 text-white px-4 rounded hover:bg-blue-700 transition">
-        Buscar
+      <button
+        id="themeToggle"
+        class="bg-white dark:bg-slate-700 dark:text-white text-black px-3 py-1 rounded transition hover:scale-105"
+      >
+        🌙
       </button>
+    </header>
 
-      <ul id="autocompleteList"
-          class="absolute top-12 left-0 w-full bg-white dark:bg-slate-700 shadow rounded hidden z-10">
-      </ul>
-    </form>
-  </section>
+    <main class="max-w-5xl mx-auto p-4 space-y-6">
+      <!-- Buscador -->
+      <section>
+        <form id="searchForm" class="flex gap-2 relative">
+          <div class="relative">
+            <input
+              id="cityInput"
+              type="text"
+              placeholder="Buscar ciudad..."
+              class="w-full p-2 rounded border dark:bg-slate-700 dark:text-white"
+            />
 
-  <!-- Clima Actual -->
-  <section id="weatherSection"
-           class="bg-white dark:bg-slate-700 rounded-xl shadow p-4 hidden transition-colors duration-300">
-  </section>
+            <ul
+              id="suggestions"
+              class="absolute z-10 w-full bg-white dark:bg-slate-700 border dark:border-slate-600 rounded mt-1 shadow hidden"
+            ></ul>
+          </div>
+          <button
+            class="bg-blue-600 text-white px-4 rounded hover:bg-blue-700 transition"
+          >
+            Buscar
+          </button>
 
-  <!-- Pronóstico -->
-  <section id="forecastSection"
-           class="grid md:grid-cols-5 gap-4 hidden">
-  </section>
+          <ul
+            id="autocompleteList"
+            class="absolute top-12 left-0 w-full bg-white dark:bg-slate-700 shadow rounded hidden z-10"
+          ></ul>
+        </form>
+      </section>
 
-  <!-- Recomendaciones -->
-  <section id="recommendationsSection"
-           class="bg-white dark:bg-slate-700 rounded-xl shadow p-4 hidden transition-colors duration-300">
-  </section>
+      <!-- Clima Actual -->
+      <section
+        id="weatherSection"
+        class="bg-white dark:bg-slate-700 rounded-xl shadow p-4 hidden transition-colors duration-300"
+      ></section>
 
-  <!-- Favoritos -->
-  <section class="bg-white dark:bg-slate-700 rounded-xl shadow p-4 transition-colors duration-300">
-    <h2 class="text-lg font-bold mb-2">⭐ Favoritos</h2>
-    <ul id="favoritesList" class="space-y-2"></ul>
-  </section>
+      <!-- Pronóstico -->
+      <section
+        id="forecastSection"
+        class="grid md:grid-cols-5 gap-4 hidden"
+      ></section>
 
-</main>
+      <!-- Recomendaciones -->
+      <section
+        id="recommendationsSection"
+        class="bg-white dark:bg-slate-700 rounded-xl shadow p-4 hidden transition-colors duration-300"
+      ></section>
 
-<script type="module" src="js/main.js"></script>
-<script src="js/theme.js"></script>
-</body>
+      <!-- Historial -->
+      <section
+        class="bg-white dark:bg-slate-700 rounded-xl shadow p-4 transition-colors duration-300"
+      >
+        <h2 class="text-lg font-bold mb-2">🕘 Últimas búsquedas</h2>
+        <ul id="historyList" class="space-y-2"></ul>
+      </section>
+
+      <!-- Favoritos -->
+      <section
+        class="bg-white dark:bg-slate-700 rounded-xl shadow p-4 transition-colors duration-300"
+      >
+        <h2 class="text-lg font-bold mb-2">⭐ Favoritos</h2>
+        <ul id="favoritesList" class="space-y-2"></ul>
+      </section>
+    </main>
+
+    <script type="module" src="js/main.js"></script>
+    <script src="js/theme.js"></script>
+  </body>
 </html>

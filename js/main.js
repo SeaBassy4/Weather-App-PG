@@ -5,6 +5,8 @@ import {
   getFavorites,
   removeFavorite,
   isFavorite,
+  getSearchHistory,
+  addToSearchHistory,
 } from "./storage.js";
 
 const form = document.getElementById("searchForm");
@@ -27,6 +29,9 @@ form.addEventListener("submit", async (e) => {
     renderWeather(weather);
     renderForecast(forecast);
     renderRecommendations(weather);
+
+    addToSearchHistory(city);
+    renderHistory();
   } catch (error) {
     alert(error.message);
   }
@@ -39,7 +44,7 @@ function renderWeather(data) {
 
   weatherSection.innerHTML = `
     <h2 class="text-xl font-bold">${data.name}</h2>
-    <p class="text-3xl">${data.main.temp}°C</p>
+    <p class="text-3xl">${Math.round(data.main.temp)}°C</p>
     <p>${data.weather[0].description}</p>
     
     <button id="favBtn"
@@ -66,6 +71,7 @@ function renderWeather(data) {
     renderFavorites();
   });
 }
+
 async function renderRecommendations(weather) {
   recommendationsSection.classList.remove("hidden");
 
@@ -75,6 +81,39 @@ async function renderRecommendations(weather) {
     <h2 class="font-bold text-lg mb-2">Recomendaciones</h2>
     <p class="mb-2">${suggestion}</p>
   `;
+}
+
+const historyList = document.getElementById("historyList");
+
+function renderHistory() {
+  historyList.innerHTML = "";
+
+  const history = getSearchHistory();
+
+  history.forEach((city) => {
+    const li = document.createElement("li");
+    li.className =
+      "cursor-pointer bg-slate-100 dark:bg-slate-600 dark:hover:bg-slate-500 p-2 rounded hover:bg-slate-200 transition-colors duration-300";
+
+    li.textContent = city;
+
+    li.addEventListener("click", async () => {
+      try {
+        const weather = await getWeather(city);
+        const forecast = await getForecast(city);
+
+        renderWeather(weather);
+        renderForecast(forecast);
+        renderRecommendations(weather);
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    historyList.appendChild(li);
+  });
 }
 
 function renderFavorites() {
@@ -135,7 +174,7 @@ function renderForecast(data) {
       <p class="font-semibold">
         ${new Date(day.dt_txt).toLocaleDateString()}
       </p>
-      <p class="text-xl">${day.main.temp}°C</p>
+      <p class="text-xl">${Math.round(day.main.temp)}°C</p>
       <p class="text-sm capitalize">
         ${day.weather[0].description}
       </p>
@@ -170,4 +209,5 @@ themeToggle.addEventListener("click", () => {
   console.log("Dark mode:", isDark);
 });
 
+renderHistory();
 renderFavorites();

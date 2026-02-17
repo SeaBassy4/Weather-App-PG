@@ -30,3 +30,13 @@ export function getPlaces(lat, lon) {
   const url = `https://api.opentripmap.com/0.1/en/places/radius?radius=5000&lon=${lon}&lat=${lat}&apikey=${CONFIG.OPEN_TRIP_KEY}`;
   return tripBreaker.fire(url);
 }
+
+export async function getCitySuggestions(query) {
+  if (!query) return [];
+
+  const url = `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${API_KEY}`;
+
+  const data = await fetchWithRetry(url);
+
+  return data;
+}

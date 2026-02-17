@@ -20,3 +20,24 @@ export function removeFavorite(city) {
 export function isFavorite(city) {
   return getFavorites().includes(city);
 }
+
+// HISTORIAL
+
+export function getSearchHistory() {
+  return JSON.parse(localStorage.getItem("searchHistory")) || [];
+}
+
+export function addToSearchHistory(city) {
+  let history = getSearchHistory();
+
+  // Evitar duplicados recientes
+  history = history.filter((item) => item.toLowerCase() !== city.toLowerCase());
+
+  history.unshift(city); // agregar al inicio
+
+  if (history.length > 5) {
+    history.pop(); // eliminar la más vieja
+  }
+
+  localStorage.setItem("searchHistory", JSON.stringify(history));
+}
