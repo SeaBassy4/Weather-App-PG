@@ -1,15 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clima y Viajes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1 class="text-xl text-green-500">
-        hola
-    </h1>]
-    
+
+<body class="bg-slate-100 min-h-screen">
+
+<header class="bg-blue-900 text-white p-4 text-center shadow-md">
+  <h1 class="text-2xl font-bold">🌎 Clima & Recomendaciones de Viaje</h1>
+</header>
+
+<main class="max-w-5xl mx-auto p-4 space-y-6">
+
+  <!-- Buscador -->
+  <section>
+    <form id="searchForm" class="flex gap-2 relative">
+      <input 
+        id="cityInput"
+        type="text"
+        placeholder="Buscar ciudad..."
+        class="flex-1 p-2 rounded border focus:outline-none focus:ring-2 focus:ring-blue-500"
+        autocomplete="off"
+        required
+      />
+      <button class="bg-blue-600 text-white px-4 rounded hover:bg-blue-700 transition">
+        Buscar
+      </button>
+
+      <ul id="autocompleteList"
+          class="absolute top-12 left-0 w-full bg-white shadow rounded hidden z-10">
+      </ul>
+    </form>
+  </section>
+
+  <!-- Clima Actual -->
+  <section id="weatherSection"
+           class="bg-white rounded-xl shadow p-4 hidden">
+  </section>
+
+  <!-- Pronóstico -->
+  <section id="forecastSection"
+           class="grid md:grid-cols-5 gap-4 hidden">
+  </section>
+
+  <!-- Recomendaciones -->
+  <section id="recommendationsSection"
+           class="bg-white rounded-xl shadow p-4 hidden">
+  </section>
+
+  <!-- Favoritos -->
+  <section class="bg-white rounded-xl shadow p-4">
+    <h2 class="text-lg font-bold mb-2">⭐ Favoritos</h2>
+    <ul id="favoritesList" class="space-y-2"></ul>
+  </section>
+
+</main>
+
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
