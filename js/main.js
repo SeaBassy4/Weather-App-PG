@@ -24,6 +24,7 @@ const recommendationsSection = document.getElementById(
   "recommendationsSection",
 );
 const favoritesList = document.getElementById("favoritesList");
+let currentWeatherData = null;
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -45,14 +46,20 @@ form.addEventListener("submit", async (e) => {
 });
 
 function renderWeather(data) {
+  currentWeatherData = data;
   weatherSection.classList.remove("hidden");
 
   const favorite = isFavorite(data.name);
+  const icon = getWeatherIcon(data.weather[0].icon);
 
   weatherSection.innerHTML = `
-    <h2 class="text-xl font-bold">${data.name}</h2>
-    <p class="text-3xl">${Math.round(data.main.temp)}°C</p>
-    <p>${data.weather[0].description}</p>
+    <div class="flex items-center justify-between">
+      <h2 class="text-xl font-bold">${data.name}</h2>
+      <span class="text-5xl">${icon}</span>
+    </div>
+
+    <p class="text-3xl mt-2">${Math.round(data.main.temp)}°C</p>
+    <p class="capitalize">${data.weather[0].description}</p>
     
     <button id="favBtn"
       class="mt-3 px-4 py-1 rounded transition 
@@ -74,9 +81,34 @@ function renderWeather(data) {
       saveFavorite(data.name);
     }
 
-    renderWeather(data); // 🔄 re-render botón
+    renderWeather(data);
     renderFavorites();
   });
+}
+
+function getWeatherIcon(iconCode) {
+  const iconMap = {
+    "01d": "☀️",
+    "01n": "🌙",
+    "02d": "⛅",
+    "02n": "☁️",
+    "03d": "☁️",
+    "03n": "☁️",
+    "04d": "☁️",
+    "04n": "☁️",
+    "09d": "🌧️",
+    "09n": "🌧️",
+    "10d": "🌦️",
+    "10n": "🌧️",
+    "11d": "⛈️",
+    "11n": "⛈️",
+    "13d": "❄️",
+    "13n": "❄️",
+    "50d": "🌫️",
+    "50n": "🌫️",
+  };
+
+  return iconMap[iconCode] || "☀️";
 }
 
 async function renderRecommendations(weather) {
@@ -160,6 +192,13 @@ function renderFavorites() {
     li.querySelector("button").addEventListener("click", () => {
       removeFavorite(city);
       renderFavorites();
+
+      if (
+        currentWeatherData &&
+        currentWeatherData.name.toLowerCase() === city.toLowerCase()
+      ) {
+        renderWeather(currentWeatherData);
+      }
     });
 
     favoritesList.appendChild(li);
@@ -177,10 +216,13 @@ function renderForecast(data) {
     card.className =
       "bg-white dark:bg-slate-700 dark:text-white p-3 rounded shadow text-center transition-colors duration-300";
 
+    const icon = getWeatherIcon(day.weather[0].icon);
+
     card.innerHTML = `
       <p class="font-semibold">
         ${new Date(day.dt_txt).toLocaleDateString()}
       </p>
+      <p class="text-4xl">${icon}</p>
       <p class="text-xl">${Math.round(day.main.temp)}°C</p>
       <p class="text-sm capitalize">
         ${day.weather[0].description}
