@@ -85,11 +85,11 @@ function renderFavorites() {
   favorites.forEach((city) => {
     const li = document.createElement("li");
     li.className =
-      "flex justify-between items-center bg-slate-100 p-2 rounded hover:bg-slate-200 transition";
+      "flex justify-between items-center bg-slate-100 dark:bg-slate-600 dark:hover:bg-slate-500 p-2 rounded hover:bg-slate-200 transition-colors duration-300";
 
     li.innerHTML = `
       <span class="cursor-pointer font-medium">${city}</span>
-      <button class="text-red-500 hover:text-red-700">
+      <button class="text-red-500 dark:text-red-400 hover:text-red-700">
         🗑️
       </button>
     `;
@@ -128,7 +128,8 @@ function renderForecast(data) {
 
   daily.forEach((day) => {
     const card = document.createElement("div");
-    card.className = "bg-white p-3 rounded shadow text-center";
+    card.className =
+      "bg-white dark:bg-slate-700 dark:text-white p-3 rounded shadow text-center transition-colors duration-300";
 
     card.innerHTML = `
       <p class="font-semibold">
@@ -143,5 +144,30 @@ function renderForecast(data) {
     forecastSection.appendChild(card);
   });
 }
+
+const themeToggle = document.getElementById("themeToggle");
+
+if (!themeToggle) {
+  console.error("No se encontró el botón themeToggle");
+}
+
+const savedTheme = localStorage.getItem("theme");
+
+if (savedTheme === "dark") {
+  document.documentElement.classList.add("dark");
+  themeToggle.textContent = "☀️";
+}
+
+themeToggle.addEventListener("click", () => {
+  document.documentElement.classList.toggle("dark");
+
+  const isDark = document.documentElement.classList.contains("dark");
+
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+
+  themeToggle.textContent = isDark ? "☀️" : "🌙";
+
+  console.log("Dark mode:", isDark);
+});
 
 renderFavorites();
