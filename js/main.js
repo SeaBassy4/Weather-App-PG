@@ -1,4 +1,11 @@
-import { getWeather, getForecast, getPlaces } from "./api.js";
+import {
+  getWeather,
+  getForecast,
+  getPlaces,
+  getCitySuggestions,
+  getWeatherByCoords,
+  getForecastByCoords,
+} from "./api.js";
 import { climateSuggestion } from "./recommendations.js";
 import {
   saveFavorite,
@@ -207,6 +214,83 @@ themeToggle.addEventListener("click", () => {
   themeToggle.textContent = isDark ? "☀️" : "🌙";
 
   console.log("Dark mode:", isDark);
+});
+
+// AUTOCOMPLETE IN SEARCHBAR
+
+const suggestionsList = document.getElementById("suggestions");
+
+let debounceTimeout;
+
+input.addEventListener("input", () => {
+  const query = input.value.trim();
+
+  clearTimeout(debounceTimeout);
+
+  debounceTimeout = setTimeout(async () => {
+    if (query.length < 3) {
+      suggestionsList.classList.add("hidden");
+      return;
+    }
+
+    try {
+      const cities = await getCitySuggestions(query);
+      renderSuggestions(cities);
+    } catch (error) {
+      console.error(error);
+    }
+  }, 300);
+});
+
+function renderSuggestions(cities) {
+  suggestionsList.innerHTML = "";
+
+  if (!cities.length) {
+    suggestionsList.classList.add("hidden");
+    return;
+  }
+
+  cities.forEach((city) => {
+    const li = document.createElement("li");
+
+    li.className =
+      "p-2 cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors duration-200";
+
+    li.textContent = `${city.name}${
+      city.state ? ", " + city.state : ""
+    }, ${city.country}`;
+
+    li.addEventListener("click", async () => {
+      try {
+        suggestionsList.classList.add("hidden");
+
+        const weather = await getWeatherByCoords(city.lat, city.lon);
+        const forecast = await getForecastByCoords(city.lat, city.lon);
+
+        renderWeather(weather);
+        renderForecast(forecast);
+        renderRecommendations(weather);
+
+        addToSearchHistory(city.name);
+        renderHistory();
+
+        input.value = `${city.name}, ${city.country}`;
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    suggestionsList.appendChild(li);
+  });
+
+  suggestionsList.classList.remove("hidden");
+}
+
+// Cerrar sugerencias al hacer click fuera
+document.addEventListener("click", (e) => {
+  if (!e.target.closest("#cityInput")) {
+    suggestionsList.classList.add("hidden");
+  }
 });
 
 renderHistory();

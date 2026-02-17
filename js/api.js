@@ -31,12 +31,22 @@ export function getPlaces(lat, lon) {
   return tripBreaker.fire(url);
 }
 
-export async function getCitySuggestions(query) {
-  if (!query) return [];
+export function getCitySuggestions(query) {
+  if (!query) return Promise.resolve([]);
 
-  const url = `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${API_KEY}`;
+  const url = `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${CONFIG.OPEN_WEATHER_KEY}`;
 
-  const data = await fetchWithRetry(url);
+  return weatherBreaker.fire(url);
+}
 
-  return data;
+export function getWeatherByCoords(lat, lon) {
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${CONFIG.OPEN_WEATHER_KEY}&units=metric&lang=es`;
+
+  return weatherBreaker.fire(url);
+}
+
+export function getForecastByCoords(lat, lon) {
+  const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${CONFIG.OPEN_WEATHER_KEY}&units=metric&lang=es`;
+
+  return weatherBreaker.fire(url);
 }
