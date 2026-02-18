@@ -40,5 +40,5 @@ The application will open in your browser automatically.
 
 ## Screenshots
 
-![Screenshot 1](assets\Screenshot.png)
-![Screenshot 2](assets\Screenshot2.png)
+![Screenshot 1](assets/Screenshot.png)
+![Screenshot 2](assets/Screenshot2.png)
