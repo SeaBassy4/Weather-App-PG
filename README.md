@@ -38,6 +38,9 @@ Or click the **"Live Preview"** button in the top-right corner of VS Code.
 
 The application will open in your browser automatically.
 
+Alternativley, you can also access it through the hyperlink:
+https://weather-app-pg1.netlify.app/
+
 ## Screenshots
 
 ![Screenshot 1](assets/Screenshot.png)
