@@ -113,13 +113,69 @@ function getWeatherIcon(iconCode) {
 
 async function renderRecommendations(weather) {
   recommendationsSection.classList.remove("hidden");
+  recommendationsSection.innerHTML = "<p>Cargando recomendaciones...</p>";
 
-  const suggestion = climateSuggestion(weather.weather[0].main);
+  const { lat, lon } = weather.coord;
+  const climate = weather.weather[0].main;
 
-  recommendationsSection.innerHTML = `
-    <h2 class="font-bold text-lg mb-2">Recomendaciones</h2>
-    <p class="mb-2">${suggestion}</p>
-  `;
+  try {
+    const placesData = await getPlaces(lat, lon);
+    const desiredKinds = climateSuggestion(climate);
+
+    // 1️⃣ Filtrar solo lugares con nombre válido
+    const validPlaces = placesData.features.filter((p) => {
+      const name = p?.properties?.name;
+      return typeof name === "string" && name.trim().length > 2;
+    });
+
+    // 2️⃣ Filtrar por clima
+    let filteredPlaces = validPlaces.filter((p) => {
+      const kinds = p?.properties?.kinds || "";
+
+      return desiredKinds.some((kind) =>
+        kinds.toLowerCase().includes(kind.toLowerCase()),
+      );
+    });
+
+    // 3️⃣ Si no hay coincidencias climáticas, usar lugares válidos
+    if (!filteredPlaces.length) {
+      filteredPlaces = validPlaces;
+    }
+
+    filteredPlaces.sort(
+      (a, b) => (b.properties.rate || 0) - (a.properties.rate || 0),
+    );
+    // 4️⃣ Tomar máximo 5
+    const topPlaces = filteredPlaces.slice(0, 5);
+
+    // 5️⃣ Si aún no hay lugares, mostrar mensaje
+    if (!topPlaces.length) {
+      recommendationsSection.innerHTML = `
+        <p>No se encontraron recomendaciones disponibles.</p>
+      `;
+      return;
+    }
+
+    recommendationsSection.innerHTML = `
+      <h2 class="font-bold text-lg mb-3">
+        Recomendado en ${weather.name}
+      </h2>
+      <ul class="space-y-2">
+        ${topPlaces
+          .map(
+            (place) => `
+          <li class="bg-white dark:bg-slate-700 p-2 rounded shadow">
+            ${place.properties.name}
+          </li>
+        `,
+          )
+          .join("")}
+      </ul>
+    `;
+  } catch (error) {
+    recommendationsSection.innerHTML =
+      "<p>Error al cargar recomendaciones.</p>";
+  }
 }
 
 const historyList = document.getElementById("historyList");
